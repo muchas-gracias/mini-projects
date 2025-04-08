@@ -103,7 +103,19 @@ class Grid_search:
         primary.add(return_value)
       if(return_value := self.search_south_west(idx)):
         primary.add(return_value)
-      
+
+    if primary or secondary:
+      break
+    idx += 1
+  return primary, secondary
+
+def start)self):
+  self.get_all_points()
+  primary, secondary = self.find_closest()
+  if primary:
+    print(f"primary {primary}")
+  else:
+    print(f"secondary {secondary}")
 
 def main():
   grid = [
