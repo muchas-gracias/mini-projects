@@ -27,7 +27,7 @@ class Grid_search:
 
    def search_south(self, idx):
 
-    if self.vertica+ - idx <= self.rows:
+    if self.vertical + idx <= self.rows:
       search = (self.vertical + idx, self.horizontal)
       if search in self.points:
         return search
