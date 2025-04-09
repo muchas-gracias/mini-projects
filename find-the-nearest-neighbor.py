@@ -63,6 +63,7 @@ class Grid_Search:
     
     Args:
       None
+      
     Return:
       True if > 0 has been found, or Fase if 0 found
     """
@@ -96,13 +97,20 @@ class Grid_Search:
     
   def find_closest(self) -> list:
     """
+    Iterates the points and calculates the coordinates to an integer added to a list.
+    
+    Args:
+      None
+    
+    Return:
+      indices (list) : list of index positions
     
     """
     temp = []
 
     for each in self.points:
       temp.append(abs(self.vertical - each[0]) + abs(self.horizontal - each[1]))
-
+    
     indices = self.find_min_val(temp)
     
     return indices
@@ -116,9 +124,7 @@ class Grid_Search:
     
     return [self.points[each] for each in indices]
 
-
 def main() -> None:
-  
   """
   Entry point of the program. Sets up the grid, the starting point,
   as well as creates and instance of the Grid_Search class.
