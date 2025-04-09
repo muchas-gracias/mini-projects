@@ -33,7 +33,20 @@ License:
 
 """
 class Grid_Search:
+  """
+  Grid Search class the sets up, iterates, parses, and finds the closest point(s)
+  within the grid.
+  
+  Attributes:
+    start_row (str): start x coordinate
+    start_col (str): starting y coordinate
+    grid (list): list of lists
+
+  """
   def __init__(self, start_row, start_col, grid):
+    """
+    
+    """
     self.vertical = start_row
     self.horizontal = start_col
     self.grid = grid
@@ -45,6 +58,14 @@ class Grid_Search:
     self.point = "x"
 
   def get_all_points(self) -> bool:
+    """
+    Iterates a list of lists to find every x, and append the x,y coordinate
+    
+    Args:
+      None
+    Return:
+      True if > 0 has been found, or Fase if 0 found
+    """
     points_found = False
     
     for index, row in enumerate(self.grid):
@@ -57,6 +78,16 @@ class Grid_Search:
     return True if points_found else False
   
   def find_min_val(self, temp) -> list:
+    """
+    Iterates a list and of integers and finds the minimum number and the index
+    of that number.
+    
+    Args:
+      temp (list) : list of integers
+    
+    Return:
+      list: n returns the list of indices
+    """
     min_val = min(temp)
     
     min_indices = [index for index, value in enumerate(temp) if value == min_val]
@@ -64,6 +95,9 @@ class Grid_Search:
     return min_indices
     
   def find_closest(self) -> list:
+    """
+    
+    """
     temp = []
 
     for each in self.points:
@@ -85,20 +119,31 @@ class Grid_Search:
 
 def main() -> None:
   
+  """
+  Entry point of the program. Sets up the grid, the starting point,
+  as well as creates and instance of the Grid_Search class.
+  
+  Args:
+    None
+    
+  Return:
+    None
+  """
+  
   grid = [
     ['o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o'],
     ['o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o'],
     ['o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o'],
     ['o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o'],
-    ['o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o'],
+    ['o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'x'],
     ['o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o'],
     ['o', 'o', 'o', 'o', 'V', 'o', 'o', 'o', 'o', 'o'],
     ['o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o'],
     ['o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o'],
-    ['o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o']
+    ['o', 'o', 'o', 'x', 'o', 'o', 'o', 'o', 'o', 'o']
   ]
 
-  start_row, start_col = 6, 4
+  start_row, start_col = 0, 1
   start = Grid_Search(start_row, start_col, grid)
   print(f"Closest Points = {start.start()}")
 
