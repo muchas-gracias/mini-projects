@@ -1,13 +1,18 @@
 
-class Rotate:
-    def __init__(self):
-        pass
+class Circular:
+    def __init__(self, items):
+        self.items = items
+
+    def __getitem__(self, index):
+        return self.items[index % len(self.items)]
 
 
 class Traverse:
     def __init__(self, grid):
         self.skip = False
         self.next = False
+        self.circle = Circular([0,1,2,3])
+        # print(self.circle[-25])
 
         self.grid = grid
         self.symbols = {"blocker": "x", "go": "o", "start": ">", "end": "<"}
