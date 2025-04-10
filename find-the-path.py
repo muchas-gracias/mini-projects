@@ -1,11 +1,24 @@
 
 class Circular:
     def __init__(self, items):
-        self.items = items
+        self.lst = items
+        self.curr_idx = 0
+        self.from_idx = 0
+        self.not_traveled = []
 
-    def __getitem__(self, index):
-        return self.items[index % len(self.items)]
+    def __getitem__(self, idx):
+        self.curr_idx = (self.curr_idx + idx) % len(self.lst)
 
+        return self.curr_idx
+
+    def remove_from_traveled(self, val):
+        self.not_traveled.remove(val)
+
+        return
+
+    def fill_traveled(self):
+        self.not_traveled.clear()
+        self.not_traveled = list(range(4))
 
 class Traverse:
     def __init__(self, grid):
@@ -97,13 +110,18 @@ class Traverse:
         self.get_all_blockers()
         self.find_start()
 
+
         while not end:
+
             idx = 0
             while idx < max_iter:
+                self.circle.fill_traveled()
+                self.remove_from_traveled(self.__getitem__(self.curr_idx - 2))
 
-                self.directions[idx]()
-                if self.next:
-                    idx += 1
+
+        #         self.directions[idx]()
+        #         if self.next:
+        #             idx += 1
 
 
 
