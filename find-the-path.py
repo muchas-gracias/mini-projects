@@ -15,36 +15,57 @@ class Traverse:
         self.stuck = {}
         self.stuck_count = 0
         self.current = (0, 0)
-        self.directions = [self.move(0, 1), self.move(1, 0), self.move(0, -1), self.move(-1, 0)]
+        self.directions = [
+            lambda: self.move(0, 1),
+            lambda: self.move(1, 0),
+            lambda: self.move(0, -1),
+            lambda: self.move(-1, 0)
+            ]
 
+    def check_if_in_bounds(self, move):
+
+        if move[0] < 0 and move[0] >= len(self.grid):
+            return False
+
+        if move[1] < 0 and move[1] >= len(self.grid[0]):
+            return False
+
+        return True
 
 
     def move(self, vertical, horizontal):
+
         self.next = False
+        print(f" current is {self.current}")
 
-        # setting  temp movement to the next projected move
+        # # setting  temp movement to the next projected move
         movement = (self.current[0] + vertical, self.current[1] + horizontal)
+        print(f"after changing movement {movement}")
 
-        if movement not in self.blockers: # if there isn't an  blocker
+        # if there isn't an  blocker
+        if movement not in self.blockers and self.check_if_in_bounds(movement):
             self.current = movement
+            print(f"changing current {self.current}")
+
+        elif not self.check_if_in_bounds(movement):
+            return
 
         else: # if there is an obstacle
-            if not (self.current == self.stuck): # if obstacle not visited
-                self.stuck = self.current
-                self.stuck_count += 1
+            if self.current not in self.stuck: # if obstacle not visited
+
+                self.stuck[self.current] = 1
+
             else:
-                if self.stuck_count == 3: # if obstacle visited 3x's
-                    self.blockers.append(self.stuck)
-                    self.stuck = ()
-                    self.stuck_count = 0
+                if self.stuck.get(self.current) == 3: # if obstacle visited 3x's
+                    self.blockers.append(self.current) # adding to blockers list
+                    del self.stuck[self.current]
+
                 else: # if obstacle hasn't been visited 3x's increment
-                    self.stuck += 1
+                    self.stuck[self.current] += 1
 
             self.next = True # move to the next direction
 
-
         return
-        print(self.grid[movement[0]][movement[1]])
 
 
     def find_start(self):
@@ -66,17 +87,26 @@ class Traverse:
 
     def start(self):
         end = False
+        max_iter = len(self.directions)
 
         self.get_all_blockers()
         self.find_start()
 
         while not end:
+            idx = 0
+            while idx < max_iter:
 
-            for each in self.directions:
-                print(each)
-            end=True
+                self.directions[idx]()
+                if self.next:
+                    idx += 1
 
 
+
+
+
+
+
+        print(self.stuck)
 
 def main():
 
