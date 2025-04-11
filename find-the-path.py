@@ -111,7 +111,7 @@ class Traverse:
         return
 
     def start(self):
-
+        # for 4-11 each move evaluate 3 side and mark possibilities
         max_iter = len(self.directions)
         from_dir = 2
 
