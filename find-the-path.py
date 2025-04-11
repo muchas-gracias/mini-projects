@@ -2,29 +2,33 @@
 class Circular:
     def __init__(self, items):
         self.lst = items
-        self.curr_idx = 0
-        self.from_idx = 0
-        self.not_traveled = []
+        self.curr_idx = 1
 
     def __getitem__(self, idx):
-        self.curr_idx = (self.curr_idx + idx) % len(self.lst)
+        item = (self.curr_idx + idx) % len(self.lst)
 
-        return self.curr_idx
+        return item
 
     def remove_from_traveled(self, val):
-        self.not_traveled.remove(val)
+        print(f"REMOVING {val} from {self.lst}")
+        if val in self.lst:
+            self.lst.remove(val)
 
         return
 
     def fill_traveled(self):
-        self.not_traveled.clear()
-        self.not_traveled = list(range(4))
+        self.lst.clear()
+        self.lst = list(range(4))
+
+        return
 
 class Traverse:
     def __init__(self, grid):
-        self.skip = False
         self.next = False
-        self.circle = Circular([0,1,2,3])
+        self.end = False
+
+
+        self.cir = Circular([0,1,2,3])
         # print(self.circle[-25])
 
         self.grid = grid
@@ -34,18 +38,18 @@ class Traverse:
         self.stuck_count = 0
         self.current = (0, 0)
         self.directions = [
-            lambda: self.move(0, 1),
-            lambda: self.move(1, 0),
-            lambda: self.move(0, -1),
-            lambda: self.move(-1, 0)
+            lambda: self.move(-1, 0), #north
+            lambda: self.move(0, 1), # east
+            lambda: self.move(1, 0), # south
+            lambda: self.move(0, -1) # west
             ]
 
     def check_if_in_bounds(self, move):
 
-        if move[0] < 0 and move[0] >= len(self.grid):
+        if move[0] < 0 or move[0] >= len(self.grid):
             return False
 
-        if move[1] < 0 and move[1] >= len(self.grid[0]):
+        if move[1] < 0 or move[1] >= len(self.grid[0]):
             return False
 
         return True
@@ -54,6 +58,7 @@ class Traverse:
     def move(self, vertical, horizontal):
 
         self.next = False
+
         print(f" current is {self.current}")
 
         # # setting  temp movement to the next projected move
@@ -66,6 +71,8 @@ class Traverse:
             print(f"changing current {self.current}")
 
         elif not self.check_if_in_bounds(movement):
+            self.next = True
+            print("out of bounds")
             return
 
         else: # if there is an obstacle
@@ -104,24 +111,44 @@ class Traverse:
         return
 
     def start(self):
-        end = False
+
         max_iter = len(self.directions)
+        from_dir = 2
 
         self.get_all_blockers()
         self.find_start()
+        greg = 0
+        nel = 0
+        self.cir.curr_idx = 1
+        while not self.end:
+            if not self.cir.lst:
+                self.cir.fill_traveled()
 
+            #removing coming from directions
+            self.cir.remove_from_traveled(self.cir.__getitem__(from_dir))
+            print("++++++++++++")
 
-        while not end:
+            while self.cir.lst:
+                greg += 1
+                self.directions[self.cir.curr_idx]() #travel in the direction
 
-            idx = 0
-            while idx < max_iter:
-                self.circle.fill_traveled()
-                self.remove_from_traveled(self.__getitem__(self.curr_idx - 2))
+                if self.end:
+                    break
 
+                if self.next:
+                    print(f"curr direction ++ {self.cir.curr_idx}")
+                    print(self.cir.lst)
+                    self.cir.remove_from_traveled(self.cir.curr_idx) #removing curr direction
+                    print("gregory")
+                    self.cir.curr_idx = self.cir.lst.pop(0) # setting next direction in the list
+                    print(f"current direction {self.cir.curr_idx} and list is {self.cir.lst}")
+                    print(f"\t \t \t\t\tcoordinates now are {self.current}")
+                if greg == 500:
+                    break
+            nel += 1
+            if nel == 255:
+                break
 
-        #         self.directions[idx]()
-        #         if self.next:
-        #             idx += 1
 
 
 
@@ -138,8 +165,8 @@ def main():
     ['x', 'x', 'o', 'x', 'o', 'o', 'o', 'o'],
     ['x', 'x', 'x', 'x', 'o', 'x', 'x', 'o'],
     ['o', 'o', 'x', 'o', 'o', 'o', 'x', 'o'],
-    ['x', 'o', 'o', 'o', 'x', 'x', 'x', 'o'],
-    ['x', 'o', 'x', 'o', 'o', 'o', 'x', 'o'],
+    ['x', 'o', 'o', 'x', 'x', 'x', 'x', 'o'],
+    ['x', 'o', 'o', 'o', 'o', 'o', 'x', 'o'],
     ['x', 'o', 'x', 'x', 'x', 'o', 'o', 'o'],
     ['<', 'o', 'o', 'x', 'o', 'x', 'x', 'x']
     ]
