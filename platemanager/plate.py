@@ -6,6 +6,10 @@ import random
 import string
 import sys
 
+from fileparsing import FileParsing
+
+PLATES = "plates.txt"
+
 def random_digit_length():
     return random.randint(1, 4)
 
@@ -15,7 +19,7 @@ def get_digit():
 def get_letter():
     return random.choice(string.ascii_uppercase)
 
-def plate():
+def plate() -> str:
     plate = []
     
     for i in range(random_digit_length()): # get set amt of digits
@@ -27,7 +31,8 @@ def plate():
         plate.append(get_letter())
 
     final_plate = scramble_plates(plate)
-    print(final_plate)    
+
+    return final_plate   
 
 def scramble_plates(plate: list) -> str:
     string = ""
@@ -50,30 +55,37 @@ def last():
 
 def main():
     idx = 0
+
     parser = argparse.ArgumentParser(description='Description of your program')
     parser.add_argument('-i', "--amount", type=int, required=True, help="Amount of License Plates")
     args = parser.parse_args()
 
     amt = args.amount
 
-    names = set()
-
     while idx < amt:
         created_first = first()
         created_last = last()
-        # plate_number = plate()
-        plate()
+        plate_number = plate()
+
+        parser = FileParsing(created_first, created_last, plate_number)
+
+        if parser.is_in_file(False):
+            continue
         
-        names.add(created_first)
-        names.add(created_last)
+        if parser.is_in_file(True):
+            continue
+
+        parser.add_to_file() # add row of info to file
 
         idx += 1
 
-    print(names)
-
 if __name__ == '__main__':
     try:
-        Path("plates.txt").write_text("")
+        letter_list = list(string.ascii_lowercase)
+        for each in letter_list:
+            parser = FileParsing(last=each)
+            parser.create_files()
+ 
         main()
     except KeyboardInterrupt:
         print("KeyboardInterrupt")
